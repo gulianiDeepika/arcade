@@ -3,7 +3,7 @@ var getContext = function() {
     return canvas.getContext('2d');
 };
 // Enemies our player must avoid
-var Enemy = function(x, y) {
+var Enemy = function(x, y, speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -12,6 +12,7 @@ var Enemy = function(x, y) {
     this.sprite = 'images/enemy-bug.png';
     this.x = x;
     this.y = y;
+    this.speed = speed;
 };
 
 // Update the enemy's position, required method for game
@@ -20,7 +21,12 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    this.x = this.x + 101;
+    if (this.x < 505) {
+      this.x += this.speed * dt;
+    } else {
+      this.x = -100;
+    }
+
     this.render();
 };
 
@@ -35,8 +41,8 @@ Enemy.prototype.render = function() {
 
 var Player =  function() {
     this.sprite = 'images/char-cat-girl.png';
-    this.x = 202;
-    this.y = 332;
+    this.x = 200;
+    this.y = 400;
 };
 
 Player.prototype.render = function() {
@@ -44,14 +50,19 @@ Player.prototype.render = function() {
 };
 
 Player.prototype.update = function(x, y) {
-    this.x = x ? x : this.x;
-    this.y = y ? y : this.y;
+      this.x = x ? x : this.x;
+      this.y = y ? y : this.y;
 };
+
+Player.prototype.reset = function() {
+    this.x = 200;
+    this.y = 400; 
+}
 
 Player.prototype.handleInput = function(dir) {
     switch(dir) {
         case 'left' : this.update(this.x - 101);
-                                            break;
+                      break;
         case 'up'   : this.update(undefined, this.y - 83);
                       break;
         case 'right': this.update(this.x + 101);
@@ -65,12 +76,14 @@ Player.prototype.handleInput = function(dir) {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-
-var e1 = new Enemy(0, 0),
-    e2 = new Enemy(0, 83),
-    e3 = new Enemy(0, 166);
-
 var allEnemies = [];
+
+(function setEnemies(){
+    allEnemies.push(new Enemy(-2, 60, 100));
+    allEnemies.push(new Enemy(-2, 100, 150));
+    allEnemies.push(new Enemy(-2, 150, 75));
+    allEnemies.push(new Enemy(-2, 200, 250));
+}());
 var player = new Player();
 
 // This listens for key presses and sends the keys to your

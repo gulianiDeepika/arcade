@@ -81,7 +81,20 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
+    }
+
+    function checkCollisions() {
+      console.log(player.x, player.y);
+      for(var i = 0 ; i < allEnemies.length ; i ++) {
+        var enemy = allEnemies[i],
+            xDist = Math.abs(enemy.x - player.x),
+            yDist = Math.abs(enemy.y - player.y);
+        if (xDist <= 50 && yDist <= 50) {
+          console.log('collided');
+          player.reset();
+        }
+      }
     }
 
     /* This is called by the update function and loops through all of the
